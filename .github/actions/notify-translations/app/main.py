@@ -1,5 +1,4 @@
 import logging
-import random
 import time
 from pathlib import Path
 from typing import Dict, Union
@@ -7,6 +6,7 @@ from typing import Dict, Union
 import yaml
 from github import Github
 from pydantic import BaseModel, BaseSettings, SecretStr
+import secrets
 
 awaiting_label = "awaiting review"
 lang_all_label = "lang-all"
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     github_event = PartialGitHubEvent.parse_raw(contents)
     translations_map: Dict[str, int] = yaml.safe_load(translations_path.read_text())
     logging.debug(f"Using translations map: {translations_map}")
-    sleep_time = random.random() * 10  # random number between 0 and 10 seconds
+    sleep_time = secrets.SystemRandom().random() * 10  # random number between 0 and 10 seconds
     pr = repo.get_pull(github_event.pull_request.number)
     logging.debug(
         f"Processing PR: {pr.number}, with anti-race condition sleep time: {sleep_time}"
