@@ -32,7 +32,7 @@ def get_github_release_text(tag_name: str):
     url = "https://api.github.com/graphql"
     headers = {"Authorization": f"Bearer {github_token}"}
     github_graphql = get_github_graphql(tag_name=tag_name)
-    response = requests.post(url, json={"query": github_graphql}, headers=headers)
+    response = requests.post(url, json={"query": github_graphql}, headers=headers, timeout=60)
     assert response.status_code == 200
     data = response.json()
     return data["data"]["repository"]["release"]["description"]
@@ -53,7 +53,7 @@ def send_gitter_message(text: str):
     headers = {"Authorization": f"Bearer {gitter_token}"}
     url = f"https://api.gitter.im/v1/rooms/{room_id}/chatMessages"
     data = {"text": text}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=60)
     assert response.status_code == 200
 
 
