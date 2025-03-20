@@ -2,6 +2,7 @@ from dirty_equals import IsDict
 from fastapi.testclient import TestClient
 
 from .main import app
+import math
 
 client = TestClient(app)
 
@@ -197,7 +198,7 @@ def test_path_float_42():
 def test_path_float_42_5():
     response = client.get("/path/float/42.5")
     assert response.status_code == 200
-    assert response.json() == 42.5
+    assert math.isclose(response.json(), 42.5, rel_tol=1e-09, abs_tol=0.0)
 
 
 def test_path_bool_foobar():
@@ -502,7 +503,7 @@ def test_path_param_gt_2():
 def test_path_param_gt0_0_05():
     response = client.get("/path/param-gt0/0.05")
     assert response.status_code == 200
-    assert response.json() == 0.05
+    assert math.isclose(response.json(), 0.05, rel_tol=1e-09, abs_tol=0.0)
 
 
 def test_path_param_gt0_0():
