@@ -16,6 +16,7 @@ import typer
 import yaml
 from jinja2 import Template
 from ruff.__main__ import find_ruff_bin
+from security import safe_command
 
 logging.basicConfig(level=logging.INFO)
 
@@ -282,8 +283,7 @@ def live(
     args = ["mkdocs", "serve", "--dev-addr", "127.0.0.1:8008"]
     if dirty:
         args.append("--dirty")
-    subprocess.run(
-        args, env={**os.environ, "LINENUMS": "true"}, cwd=lang_path, check=True
+    safe_command.run(subprocess.run, args, env={**os.environ, "LINENUMS": "true"}, cwd=lang_path, check=True
     )
 
 
@@ -390,8 +390,7 @@ def generate_docs_src_versions_for_file(file_path: Path) -> None:
     base_content = file_path.read_text(encoding="utf-8")
     previous_content = {base_content}
     for target_version in target_versions:
-        version_result = subprocess.run(
-            [
+        version_result = safe_command.run(subprocess.run, [
                 find_ruff_bin(),
                 "check",
                 "--target-version",
@@ -404,8 +403,7 @@ def generate_docs_src_versions_for_file(file_path: Path) -> None:
             capture_output=True,
         )
         content_target = version_result.stdout.decode("utf-8")
-        format_result = subprocess.run(
-            [find_ruff_bin(), "format", "-"],
+        format_result = safe_command.run(subprocess.run, [find_ruff_bin(), "format", "-"],
             input=content_target.encode("utf-8"),
             capture_output=True,
         )
