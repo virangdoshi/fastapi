@@ -1,5 +1,4 @@
 import logging
-import random
 import sys
 import time
 from pathlib import Path
@@ -9,6 +8,7 @@ import httpx
 from github import Github
 from pydantic import BaseModel, SecretStr
 from pydantic_settings import BaseSettings
+import secrets
 
 awaiting_label = "awaiting-review"
 lang_all_label = "lang-all"
@@ -326,7 +326,7 @@ def main() -> None:
         raise RuntimeError("No PR number available")
 
     # Avoid race conditions with multiple labels
-    sleep_time = random.random() * 10  # random number between 0 and 10 seconds
+    sleep_time = secrets.SystemRandom().random() * 10  # random number between 0 and 10 seconds
     logging.info(
         f"Sleeping for {sleep_time} seconds to avoid "
         "race conditions and multiple comments"

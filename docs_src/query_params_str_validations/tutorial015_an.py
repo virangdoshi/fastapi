@@ -1,9 +1,9 @@
-import random
 from typing import Union
 
 from fastapi import FastAPI
 from pydantic import AfterValidator
 from typing_extensions import Annotated
+import secrets
 
 app = FastAPI()
 
@@ -27,5 +27,5 @@ async def read_items(
     if id:
         item = data.get(id)
     else:
-        id, item = random.choice(list(data.items()))
+        id, item = secrets.choice(list(data.items()))
     return {"id": id, "name": item}
